@@ -18,24 +18,24 @@ A arquitetura do **Next Home** segue a **Clean Architecture**, separando respons
 
 ```mermaid
 graph LR
-  A[API (Next.js)] -->|HTTP Requests| B[Controllers]
+  A[NextJS APP]-->|HTTP Requests| B[Controllers]
   B -->|Call Use Cases| C[Application Layer]
   C -->|Uses| D[Domain Layer]
   C -->|Access Data via Interface| E[Infrastructure Layer]
   D -->|Defines Entities & Rules| F[Entities]
   E -->|Implements| G[Repositories & Database]
-```
 
-### 📂 Estrutura do Código
-```
-📂 NextHome
- ├── 📂 NextHome.API           # API com Controllers
- ├── 📂 NextHome.Application   # Casos de uso (Use Cases)
- │    ├── 📂 Interfaces        # Interfaces dos casos de uso
- │    ├── 📂 UseCases          # Implementações dos casos de uso
- │    ├── ApplicationModule.cs # Injeção de dependências
- ├── 📂 NextHome.Domain        # Entidades e Repositórios
- ├── 📂 NextHome.Infrastructure # Implementação dos Repositórios
+  subgraph DLLs
+    H[NextHome.API.dll]
+    I[NextHome.Application.dll]
+    J[NextHome.Domain.dll]
+    K[NextHome.Infrastructure.dll]
+  end
+
+  B -->|Uses| H
+  C -->|Uses| I
+  D -->|Uses| J
+  E -->|Uses| K
 ```
 
 ## 🛠️ Como Rodar o Projeto
