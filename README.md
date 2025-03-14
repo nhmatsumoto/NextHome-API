@@ -43,7 +43,7 @@ graph LR
 ## 🛠️ Como Rodar o Projeto
 1. **Clone o repositório**:
    ```sh
-   git clone https://github.com/seu-repositorio/next-home.git
+   git clone [https://github.com/seu-repositorio/next-home.git](https://github.com/nhmatsumoto/NextHome-API/)
    cd next-home
    ```
 2. **Configure o ambiente** (Banco de Dados, Keycloak, etc.).
