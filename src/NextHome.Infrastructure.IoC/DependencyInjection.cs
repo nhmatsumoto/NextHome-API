@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NextHome.Application;
 using NextHome.Application.Mappings;
 using NextHome.Application.Services;
 using NextHome.Application.Validators;
@@ -50,8 +51,7 @@ namespace NextHome.Infrastructure.IoC
                 });
 
             //Application 
-            services.AddScoped<IPropertyService, PropertyService>();
-
+            services.AddApplicationServices();
 
             // Repository
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

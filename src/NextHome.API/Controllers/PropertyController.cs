@@ -2,8 +2,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NextHome.Application.DTOs;
+using NextHome.Application.Interfaces.Properties;
 using NextHome.Domain.Entities;
-using NextHome.Domain.Interfaces;
 
 namespace NextHome.API.Controllers;
 
@@ -13,19 +13,35 @@ namespace NextHome.API.Controllers;
 public class PropertyController : ControllerBase
 {
     private readonly ILogger<PropertyController> _logger;
-    private readonly IPropertyService _propertyService;
+    private readonly IGetAllPropertiesUseCase _getAllPropertiesUseCase;
+    private readonly IGetPropertyByIdUseCase _getPropertyByIdUseCase;
+    private readonly ICreatePropertyUseCase _createPropertyUseCase;
+    private readonly IUpdatePropertyUseCase _updatePropertyUseCase;
+    private readonly IDeletePropertyUseCase _deletePropertyUseCase;
     private readonly IMapper _mapper;
-    public PropertyController(ILogger<PropertyController> logger, IPropertyService propertyService, IMapper mapper)
+
+    public PropertyController(
+        ILogger<PropertyController> logger,
+        IGetAllPropertiesUseCase getAllPropertiesUseCase,
+        IGetPropertyByIdUseCase getPropertyByIdUseCase,
+        ICreatePropertyUseCase createPropertyUseCase,
+        IUpdatePropertyUseCase updatePropertyUseCase,
+        IDeletePropertyUseCase deletePropertyUseCase,
+        IMapper mapper)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _propertyService = propertyService ?? throw new ArgumentNullException(nameof(propertyService));
+        _getAllPropertiesUseCase = getAllPropertiesUseCase ?? throw new ArgumentNullException(nameof(getAllPropertiesUseCase));
+        _getPropertyByIdUseCase = getPropertyByIdUseCase ?? throw new ArgumentNullException(nameof(getPropertyByIdUseCase));
+        _createPropertyUseCase = createPropertyUseCase ?? throw new ArgumentNullException(nameof(createPropertyUseCase));
+        _updatePropertyUseCase = updatePropertyUseCase ?? throw new ArgumentNullException(nameof(updatePropertyUseCase));
+        _deletePropertyUseCase = deletePropertyUseCase ?? throw new ArgumentNullException(nameof(deletePropertyUseCase));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Property>>> GetAll()
+    public async Task<ActionResult<IEnumerable<PropertyDTO>>> GetAll()
     {
-        var result = await _propertyService.GetAllPropertiesAsync();
+        var result = await _getAllPropertiesUseCase.ExecuteAsync();
         var properties = _mapper.Map<IEnumerable<PropertyDTO>>(result);
         return Ok(properties);
     }
@@ -33,7 +49,7 @@ public class PropertyController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<PropertyDTO>> GetById(int id)
     {
-        var result = await _propertyService.GetPropertyByIdAsync(id);
+        var result = await _getPropertyByIdUseCase.ExecuteAsync(id);
         if (result == null)
             return NotFound();
 
@@ -45,10 +61,11 @@ public class PropertyController : ControllerBase
     public async Task<ActionResult> Post([FromBody] PropertyDTO propertyDto)
     {
         var property = _mapper.Map<Property>(propertyDto);
-        var result = await _propertyService.AddPropertyAsync(property);
-        if (result == 1)
+        var propertyId = await _createPropertyUseCase.ExecuteAsync(property);
+
+        if (propertyId > 0)
         {
-            return CreatedAtAction(nameof(GetById), new { id = property.Id }, propertyDto);
+            return CreatedAtAction(nameof(GetById), new { id = propertyId }, propertyDto);
         }
 
         return BadRequest();
@@ -60,23 +77,30 @@ public class PropertyController : ControllerBase
         if (id != propertyDto.Id)
             return BadRequest("ID mismatch.");
 
-        var existingProperty = await _propertyService.GetPropertyByIdAsync(id);
+        var existingProperty = await _getPropertyByIdUseCase.ExecuteAsync(id);
         if (existingProperty == null)
             return NotFound();
 
         var property = _mapper.Map(propertyDto, existingProperty);
-        await _propertyService.UpdatePropertyAsync(property);
+        var success = await _updatePropertyUseCase.ExecuteAsync(property);
+
+        if (!success)
+            return BadRequest("Failed to update property.");
+
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var existingProperty = await _propertyService.GetPropertyByIdAsync(id);
+        var existingProperty = await _getPropertyByIdUseCase.ExecuteAsync(id);
         if (existingProperty == null)
             return NotFound();
 
-        await _propertyService.DeletePropertyAsync(id);
+        var success = await _deletePropertyUseCase.ExecuteAsync(id);
+        if (!success)
+            return BadRequest("Failed to delete property.");
+
         return NoContent();
     }
 }
