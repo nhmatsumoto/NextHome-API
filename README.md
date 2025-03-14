@@ -30,12 +30,14 @@ graph LR
     I[NextHome.Application.dll]
     J[NextHome.Domain.dll]
     K[NextHome.Infrastructure.dll]
+    L[NextHome.Infrastructure.CrossCutting.IoC.dll]
   end
 
   B -->|Uses| H
   C -->|Uses| I
   D -->|Uses| J
   E -->|Uses| K
+  E -->|Uses| L
 ```
 
 ## 🛠️ Como Rodar o Projeto
