@@ -40,23 +40,4 @@ graph LR
   E -->|Uses| L
 ```
 
-## 🛠️ Como Rodar o Projeto
-1. **Clone o repositório**:
-   ```sh
-   git clone (https://github.com/nhmatsumoto/NextHome-API/)
-   cd next-home
-   ```
-2. **Configure o ambiente** (Banco de Dados, Keycloak, etc.).
-3. **Rode o Backend (.NET Core)**:
-   ```sh
-   dotnet run --project NextHome.API
-   ```
-4. **Rode o Frontend (Next.js)**:
-   ```sh
-   npm install
-   npm run dev
-   ```
-
-## 📌 Contribuições
-Contribuições são bem-vindas! Faça um **fork**, crie uma **branch** e envie um **Pull Request**. 😊
 
