@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NextHome.Application;
 using NextHome.Application.Mappings;
-using NextHome.Application.Services;
 using NextHome.Application.Validators;
 using NextHome.Domain.Interfaces;
 using NextHome.Infrastructure.Repositories;
@@ -56,10 +55,6 @@ namespace NextHome.Infrastructure.IoC
             // Repository
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IPropertyRepository, PropertyRepository>();
-
-            // Application Services
-            services.AddScoped<IPropertyService, PropertyService>();
-
 
             // Fluent Validation
             // Registra automaticamente todos os validadores da camada Application
