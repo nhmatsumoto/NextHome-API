@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NextHome.Application.DTOs;
 using NextHome.Application.UseCases.Properties.Interfaces;
@@ -9,15 +8,15 @@ namespace NextHome.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize]
+//[Authorize]
 public class PropertyController : ControllerBase
 {
-    private readonly ILogger<PropertyController> _logger;
     private readonly IGetAllPropertiesUseCase _getAllPropertiesUseCase;
     private readonly IGetPropertyByIdUseCase _getPropertyByIdUseCase;
     private readonly ICreatePropertyUseCase _createPropertyUseCase;
     private readonly IUpdatePropertyUseCase _updatePropertyUseCase;
     private readonly IDeletePropertyUseCase _deletePropertyUseCase;
+    private readonly ILogger<PropertyController> _logger;
     private readonly IMapper _mapper;
 
     public PropertyController(

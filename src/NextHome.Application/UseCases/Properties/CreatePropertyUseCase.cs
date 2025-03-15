@@ -1,6 +1,6 @@
 ﻿using NextHome.Application.UseCases.Properties.Interfaces;
 using NextHome.Domain.Entities;
-using NextHome.Domain.Interfaces;
+using NextHome.Domain.Interfaces.Repositories;
 
 namespace NextHome.Application.UseCases.Properties;
 

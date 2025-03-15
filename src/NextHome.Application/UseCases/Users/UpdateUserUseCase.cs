@@ -22,7 +22,7 @@ public class UpdateUserUseCase : IUpdateUserUseCase
         var user = await _userRepository.GetByIdAsync(dto.Id, cancellationToken);
         if (user == null) throw new KeyNotFoundException("Usuário não encontrado.");
 
-        user.Name = dto.Name;
+        user.Username = dto.Username;
         user.Email = dto.Email;
 
         var validationResult = await _validator.ValidateAsync(user);

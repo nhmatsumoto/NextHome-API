@@ -24,9 +24,10 @@ public class CreateUserUseCase : ICreateUserUseCase
 
         var user = new User
         {
-            Id = Guid.NewGuid().ToString(),
-            Name = dto.Name,
-            Email = dto.Email
+            Username = dto.Username,
+            Email = dto.Email,
+            IsAvailable = true,
+            
         };
 
         var validationResult = await _validator.ValidateAsync(user);

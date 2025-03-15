@@ -3,7 +3,7 @@ using NextHome.Infrastructure.IoC;
 var builder = WebApplication.CreateBuilder(args);
 
 // Cross Cutting IoC
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

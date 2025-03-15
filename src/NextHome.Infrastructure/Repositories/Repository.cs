@@ -1,73 +1,77 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using NextHome.Domain.Interfaces;
+using NextHome.Domain.Interfaces.Repositories;
 using System.Data;
 
 namespace NextHome.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly string _connectionString;
+        private readonly IDbConnection _dbConnection;
 
-        public Repository(IConfiguration configuration)
+        public Repository(IDbConnection dbConnection)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-               ?? throw new ArgumentNullException(nameof(configuration), "Connection string not found.");
+            _dbConnection = dbConnection;
         }
 
-        private async Task<IDbConnection> CreateConnectionAsync(CancellationToken cancellationToken)
+        private IDbConnection GetOpenConnection()
         {
-            var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync(cancellationToken); 
-            return connection;
+            if (_dbConnection.State != ConnectionState.Open)
+                _dbConnection.Open();
+            return _dbConnection;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
-        {
-            string sql = $"SELECT * FROM {typeof(T).Name}";
+        private static string GetTableName() => $"[{typeof(T).Name}]";
 
-            using var connection = await CreateConnectionAsync(cancellationToken);
-            return await connection.QueryAsync<T>(sql, cancellationToken);
+        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            string tabelName = GetTableName();
+            string sql = $"SELECT * FROM {tabelName}";
+
+            return await GetOpenConnection().QueryAsync<T>(
+                new CommandDefinition(sql, cancellationToken: cancellationToken));
         }
 
-        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            string sql = $"SELECT * FROM {typeof(T).Name} WHERE Id = @Id";
+            string tabelName = GetTableName();
+            string sql = $"SELECT * FROM {tabelName} WHERE Id = @Id";
 
-            using var connection = await CreateConnectionAsync(cancellationToken);
-            return await connection.QueryFirstOrDefaultAsync<T>(sql, new { Id = id });
+            return await GetOpenConnection().QueryFirstOrDefaultAsync<T>(
+                new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
         }
 
-        public async Task<int> AddAsync(T entity, CancellationToken cancellationToken)
+        public async Task<int> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             var properties = typeof(T).GetProperties().Where(p => p.Name != "Id").ToList();
             var columnNames = string.Join(", ", properties.Select(p => p.Name));
             var paramNames = string.Join(", ", properties.Select(p => $"@{p.Name}"));
 
-            string sql = $"INSERT INTO {typeof(T).Name} ({columnNames}) OUTPUT INSERTED.Id VALUES ({paramNames})";
+            string tabelName = GetTableName();
+            string sql = $"INSERT INTO {tabelName} ({columnNames}) OUTPUT INSERTED.Id VALUES ({paramNames})";
 
-            using var connection = await CreateConnectionAsync(cancellationToken);
-            return await connection.ExecuteScalarAsync<int>(sql, entity);
+            return await GetOpenConnection().ExecuteScalarAsync<int>(
+                new CommandDefinition(sql, entity, cancellationToken: cancellationToken));
         }
 
-        public async Task<bool> UpdateAsync(T entity, CancellationToken cancellationToken)
+        public async Task<bool> UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             var properties = typeof(T).GetProperties().Where(p => p.Name != "Id").ToList();
             var setClause = string.Join(", ", properties.Select(p => $"{p.Name} = @{p.Name}"));
 
-            string sql = $"UPDATE {typeof(T).Name} SET {setClause} WHERE Id = @Id";
+            string tabelName = GetTableName();
+            string sql = $"UPDATE {tabelName} SET {setClause} WHERE Id = @Id";
 
-            using var connection = await CreateConnectionAsync(cancellationToken);
-            return await connection.ExecuteAsync(sql, entity) > 0;
+            return await GetOpenConnection().ExecuteAsync(
+                new CommandDefinition(sql, entity, cancellationToken: cancellationToken)) > 0;
         }
 
-        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken)
+        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            string sql = $"DELETE FROM {typeof(T).Name} WHERE Id = @Id";
+            string tabelName = GetTableName();
+            string sql = $"DELETE FROM {tabelName} WHERE Id = @Id";
 
-            using var connection = await CreateConnectionAsync(cancellationToken);
-            return await connection.ExecuteAsync(sql, new { Id = id }) > 0;
+            return await GetOpenConnection().ExecuteAsync(
+                new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken)) > 0;
         }
     }
 }
