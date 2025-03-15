@@ -1,4 +1,4 @@
-﻿using NextHome.Application.Interfaces.Properties;
+﻿using NextHome.Application.UseCases.Properties.Interfaces;
 using NextHome.Domain.Entities;
 using NextHome.Domain.Interfaces;
 
@@ -13,8 +13,8 @@ public class DeletePropertyUseCase : IDeletePropertyUseCase
         _repository = repository;
     }
 
-    public async Task<bool> ExecuteAsync(int id)
+    public async Task<bool> ExecuteAsync(int id, CancellationToken cancellationToken)
     {
-        return await _repository.DeleteAsync(id);
+        return await _repository.DeleteAsync(id, cancellationToken);
     }
 }

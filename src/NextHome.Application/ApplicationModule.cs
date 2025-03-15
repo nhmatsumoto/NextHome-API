@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NextHome.Application.Interfaces.Properties;
 using NextHome.Application.UseCases.Properties;
+using NextHome.Application.UseCases.Properties.Interfaces;
+using NextHome.Application.UseCases.Users;
+using NextHome.Application.UseCases.Users.Interfaces;
 
 namespace NextHome.Application
 {
@@ -8,6 +10,14 @@ namespace NextHome.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            // Users
+            services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
+            services.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
+            services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
+            services.AddScoped<IUpdateUserUseCase, UpdateUserUseCase>();
+            services.AddScoped<IDeleteUserUseCase, DeleteUserUseCase>();
+
+            // Properties
             services.AddScoped<IGetAllPropertiesUseCase, GetAllPropertiesUseCase>();
             services.AddScoped<IGetPropertyByIdUseCase, GetPropertyByIdUseCase>();
             services.AddScoped<ICreatePropertyUseCase, CreatePropertyUseCase>();

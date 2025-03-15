@@ -1,8 +1,10 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using NextHome.Domain.Entities;
 using NextHome.Domain.Interfaces;
+using System.Data;
 
 namespace NextHome.Infrastructure.Repositories;
 
@@ -13,6 +15,13 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
     public PropertyRepository(IConfiguration configuration) : base(configuration)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection");
+    }
+
+    private async Task<IDbConnection> CreateConnectionAsync(CancellationToken cancellationToken)
+    {
+        var connection = new SqlConnection(this._connectionString);
+        await connection.OpenAsync(cancellationToken);
+        return connection;
     }
 
     public async Task<IEnumerable<Property>> GetAllAsync()

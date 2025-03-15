@@ -1,4 +1,4 @@
-﻿using NextHome.Application.Interfaces.Properties;
+﻿using NextHome.Application.UseCases.Properties.Interfaces;
 using NextHome.Domain.Entities;
 using NextHome.Domain.Interfaces;
 
@@ -13,8 +13,8 @@ public class GetAllPropertiesUseCase : IGetAllPropertiesUseCase
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<IEnumerable<Property>> ExecuteAsync()
+    public async Task<IEnumerable<Property>> ExecuteAsync(CancellationToken cancellationToken)
     {
-        return await _propertyRepository.GetAllAsync();
+        return await _propertyRepository.GetAllAsync(cancellationToken);
     }
 }

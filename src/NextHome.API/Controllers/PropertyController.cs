@@ -2,7 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NextHome.Application.DTOs;
-using NextHome.Application.Interfaces.Properties;
+using NextHome.Application.UseCases.Properties.Interfaces;
 using NextHome.Domain.Entities;
 
 namespace NextHome.API.Controllers;
@@ -39,17 +39,17 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PropertyDTO>>> GetAll()
+    public async Task<ActionResult<IEnumerable<PropertyDTO>>> GetAll(CancellationToken cancellationToken)
     {
-        var result = await _getAllPropertiesUseCase.ExecuteAsync();
+        var result = await _getAllPropertiesUseCase.ExecuteAsync(cancellationToken);
         var properties = _mapper.Map<IEnumerable<PropertyDTO>>(result);
         return Ok(properties);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<PropertyDTO>> GetById(int id)
+    public async Task<ActionResult<PropertyDTO>> GetById(int id, CancellationToken cancellationToken)
     {
-        var result = await _getPropertyByIdUseCase.ExecuteAsync(id);
+        var result = await _getPropertyByIdUseCase.ExecuteAsync(id, cancellationToken);
         if (result == null)
             return NotFound();
 
@@ -58,10 +58,10 @@ public class PropertyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post([FromBody] PropertyDTO propertyDto)
+    public async Task<ActionResult> Post([FromBody] PropertyDTO propertyDto, CancellationToken cancellationToken)
     {
         var property = _mapper.Map<Property>(propertyDto);
-        var propertyId = await _createPropertyUseCase.ExecuteAsync(property);
+        var propertyId = await _createPropertyUseCase.ExecuteAsync(property, cancellationToken);
 
         if (propertyId > 0)
         {
@@ -72,17 +72,17 @@ public class PropertyController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] PropertyDTO propertyDto)
+    public async Task<IActionResult> Put(int id, [FromBody] PropertyDTO propertyDto, CancellationToken cancellationToken)
     {
         if (id != propertyDto.Id)
             return BadRequest("ID mismatch.");
 
-        var existingProperty = await _getPropertyByIdUseCase.ExecuteAsync(id);
+        var existingProperty = await _getPropertyByIdUseCase.ExecuteAsync(id, cancellationToken);
         if (existingProperty == null)
             return NotFound();
 
         var property = _mapper.Map(propertyDto, existingProperty);
-        var success = await _updatePropertyUseCase.ExecuteAsync(property);
+        var success = await _updatePropertyUseCase.ExecuteAsync(property, cancellationToken);
 
         if (!success)
             return BadRequest("Failed to update property.");
@@ -91,13 +91,13 @@ public class PropertyController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var existingProperty = await _getPropertyByIdUseCase.ExecuteAsync(id);
+        var existingProperty = await _getPropertyByIdUseCase.ExecuteAsync(id, cancellationToken);
         if (existingProperty == null)
             return NotFound();
 
-        var success = await _deletePropertyUseCase.ExecuteAsync(id);
+        var success = await _deletePropertyUseCase.ExecuteAsync(id, cancellationToken);
         if (!success)
             return BadRequest("Failed to delete property.");
 

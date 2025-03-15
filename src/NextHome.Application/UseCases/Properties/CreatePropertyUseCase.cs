@@ -1,4 +1,4 @@
-﻿using NextHome.Application.Interfaces.Properties;
+﻿using NextHome.Application.UseCases.Properties.Interfaces;
 using NextHome.Domain.Entities;
 using NextHome.Domain.Interfaces;
 
@@ -13,8 +13,8 @@ public class CreatePropertyUseCase : ICreatePropertyUseCase
         _repository = repository;
     }
 
-    public async Task<int> ExecuteAsync(Property property)
+    public async Task<int> ExecuteAsync(Property property, CancellationToken cancellationToken)
     {
-        return await _repository.AddAsync(property);
+        return await _repository.AddAsync(property, cancellationToken);
     }
 }

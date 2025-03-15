@@ -12,6 +12,25 @@ GO
 USE NextHomeDB;
 GO
 
+-- Criando a tabela de Usuários
+BEGIN TRANSACTION;
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Users' AND xtype='U')
+BEGIN
+    CREATE TABLE Users (
+		Id UNIQUEIDENTIFIER PRIMARY KEY,
+		Username NVARCHAR(100) NOT NULL,
+		Email NVARCHAR(255) NOT NULL UNIQUE,
+		CreatedAt DATETIME DEFAULT GETDATE(),
+		IsAvailable BIT NOT NULL DEFAULT 1
+	);
+
+    PRINT 'Tabela Users criada com sucesso!';
+END
+ELSE
+    PRINT 'Tabela Users já existe.';
+COMMIT TRANSACTION;
+GO
+
 -- Criando a tabela de Imobiliárias
 BEGIN TRANSACTION;
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RealEstateAgency' AND xtype='U')
