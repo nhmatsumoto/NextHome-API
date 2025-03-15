@@ -14,7 +14,7 @@ public class GetAllUsersUseCase : IGetAllUsersUseCase
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<User>> Execute(CancellationToken cancellationToken)
+    public async Task<IEnumerable<User>> Execute(CancellationToken cancellationToken = default)
     {
         return await _userRepository.GetAllAsync(cancellationToken);
     }

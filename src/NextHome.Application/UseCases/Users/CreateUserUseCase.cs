@@ -17,7 +17,7 @@ public class CreateUserUseCase : ICreateUserUseCase
         _validator = validator;
     }
 
-    public async Task<int> Execute(CreateUserDto dto, CancellationToken cancellationToken)
+    public async Task<int> Execute(CreateUserDto dto, CancellationToken cancellationToken = default)
     {
         if (await _userRepository.ExistsByEmail(dto.Email, cancellationToken))
             throw new ValidationException("E-mail já cadastrado.");

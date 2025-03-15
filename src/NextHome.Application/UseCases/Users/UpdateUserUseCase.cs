@@ -17,7 +17,7 @@ public class UpdateUserUseCase : IUpdateUserUseCase
         _validator = validator;
     }
 
-    public async Task<bool> Execute(UpdateUserDto dto, CancellationToken cancellationToken)
+    public async Task<bool> Execute(UpdateUserDto dto, CancellationToken cancellationToken = default)
     {
         var user = await _userRepository.GetByIdAsync(dto.Id, cancellationToken);
         if (user == null) throw new KeyNotFoundException("Usuário não encontrado.");

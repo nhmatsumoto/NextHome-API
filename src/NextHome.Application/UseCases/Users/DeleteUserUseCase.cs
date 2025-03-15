@@ -12,7 +12,7 @@ public class DeleteUserUseCase : IDeleteUserUseCase
         _userRepository = userRepository;
     }
 
-    public async Task<bool> Execute(int id, CancellationToken cancellationToken)
+    public async Task<bool> Execute(int id, CancellationToken cancellationToken = default)
     {
         var userExists = await _userRepository.GetByIdAsync(id, cancellationToken);
         if (userExists == null) throw new KeyNotFoundException("Usuário não encontrado.");

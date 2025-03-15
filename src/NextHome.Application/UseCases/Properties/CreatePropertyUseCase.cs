@@ -13,7 +13,7 @@ public class CreatePropertyUseCase : ICreatePropertyUseCase
         _repository = repository;
     }
 
-    public async Task<int> ExecuteAsync(Property property, CancellationToken cancellationToken)
+    public async Task<int> ExecuteAsync(Property property, CancellationToken cancellationToken = default)
     {
         return await _repository.AddAsync(property, cancellationToken);
     }

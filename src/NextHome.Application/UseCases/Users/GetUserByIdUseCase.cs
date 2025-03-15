@@ -13,7 +13,7 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
         _userRepository = userRepository;
     }
 
-    public async Task<User?> Execute(int id, CancellationToken cancellationToken)
+    public async Task<User?> Execute(int id, CancellationToken cancellationToken = default)
     {
         return await _userRepository.GetByIdAsync(id, cancellationToken);
     }

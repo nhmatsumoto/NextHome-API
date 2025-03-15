@@ -13,7 +13,7 @@ public class GetAllPropertiesUseCase : IGetAllPropertiesUseCase
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<IEnumerable<Property>> ExecuteAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<Property>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         return await _propertyRepository.GetAllAsync(cancellationToken);
     }

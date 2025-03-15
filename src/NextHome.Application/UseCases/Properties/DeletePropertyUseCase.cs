@@ -13,7 +13,7 @@ public class DeletePropertyUseCase : IDeletePropertyUseCase
         _repository = repository;
     }
 
-    public async Task<bool> ExecuteAsync(int id, CancellationToken cancellationToken)
+    public async Task<bool> ExecuteAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _repository.DeleteAsync(id, cancellationToken);
     }

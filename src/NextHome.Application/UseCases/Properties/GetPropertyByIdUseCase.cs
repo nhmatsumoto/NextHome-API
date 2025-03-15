@@ -13,7 +13,7 @@ public class GetPropertyByIdUseCase : IGetPropertyByIdUseCase
         _repository = repository;
     }
 
-    public async Task<Property> ExecuteAsync(int id, CancellationToken cancellationToken)
+    public async Task<Property> ExecuteAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _repository.GetByIdAsync(id, cancellationToken);
     }

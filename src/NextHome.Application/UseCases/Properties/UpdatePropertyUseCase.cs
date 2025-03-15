@@ -13,7 +13,7 @@ public class UpdatePropertyUseCase : IUpdatePropertyUseCase
         _repository = repository;
     }
 
-    public async Task<bool> ExecuteAsync(Property property, CancellationToken cancellationToken)
+    public async Task<bool> ExecuteAsync(Property property, CancellationToken cancellationToken = default)
     {
         return await _repository.UpdateAsync(property, cancellationToken);
     }
