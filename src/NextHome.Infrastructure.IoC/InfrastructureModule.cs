@@ -11,10 +11,21 @@ using NextHome.Infrastructure.Repositories;
 
 namespace NextHome.Infrastructure.IoC
 {
-    public static class DependencyInjection
+    public static class InfrastructureModule
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("NextHomeCorsPolicy", policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
             // Adiciona autorização
             services.AddAuthorization();
 

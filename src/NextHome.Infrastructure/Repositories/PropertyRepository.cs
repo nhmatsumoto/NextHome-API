@@ -6,10 +6,6 @@ using NextHome.Domain.Interfaces;
 
 namespace NextHome.Infrastructure.Repositories;
 
-/// <summary>
-/// Repositório específico para a entidade Property.
-/// Implementa operações CRUD utilizando Dapper.
-/// </summary>
 public class PropertyRepository : Repository<Property>, IPropertyRepository
 {
     private readonly string _connectionString;
@@ -19,10 +15,6 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
         _connectionString = configuration.GetConnectionString("DefaultConnection");
     }
 
-    /// <summary>
-    /// Obtém todos os imóveis cadastrados.
-    /// </summary>
-    /// <returns>Lista de imóveis.</returns>
     public async Task<IEnumerable<Property>> GetAllAsync()
     {
         const string sql = @"
@@ -64,12 +56,6 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
         }
     }
 
-
-    /// <summary>
-    /// Obtém um imóvel pelo ID.
-    /// </summary>
-    /// <param name="id">ID do imóvel.</param>
-    /// <returns>O imóvel correspondente ou null se não encontrado.</returns>
     public async Task<Property> GetByIdAsync(int id)
     {
         const string sql = "SELECT * FROM Property WHERE Id = @Id";
@@ -79,11 +65,6 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
         }
     }
 
-    /// <summary>
-    /// Adiciona um novo imóvel ao banco de dados.
-    /// </summary>
-    /// <param name="property">Dados do imóvel.</param>
-    /// <returns>ID do imóvel inserido.</returns>
     public async Task<int> AddAsync(Property property)
     {
         const string sql = @"
@@ -97,11 +78,6 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
         }
     }
 
-    /// <summary>
-    /// Atualiza um imóvel existente no banco de dados.
-    /// </summary>
-    /// <param name="property">Dados do imóvel com as alterações.</param>
-    /// <returns>True se a atualização foi bem-sucedida, False caso contrário.</returns>
     public async Task<bool> UpdateAsync(Property property)
     {
         const string sql = @"
@@ -118,11 +94,7 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
         }
     }
 
-    /// <summary>
-    /// Exclui um imóvel pelo ID.
-    /// </summary>
-    /// <param name="id">ID do imóvel a ser excluído.</param>
-    /// <returns>True se a exclusão foi bem-sucedida, False caso contrário.</returns>
+
     public async Task<bool> DeleteAsync(int id)
     {
         const string sql = "DELETE FROM Property WHERE Id = @Id";

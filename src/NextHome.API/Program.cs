@@ -5,17 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Cross Cutting IoC
 builder.Services.AddInfrastructure();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("NextHomeCorsPolicy", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000") 
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
-});
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
