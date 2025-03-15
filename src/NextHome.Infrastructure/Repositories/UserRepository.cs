@@ -16,7 +16,7 @@ public class UserRepository : Repository<User>, IUserRepository
 
     public async Task<int> AddAsync(User user, CancellationToken cancellationToken = default)
     {
-        var sql = "INSERT INTO Users (Id, Name, Email, CreatedAt) VALUES (@Id, @Name, @Email, @CreatedAt);" +
+        var sql = "INSERT INTO [User] (Id, Name, Email, CreatedAt) VALUES (@Id, @Name, @Email, @CreatedAt);" +
                   "SELECT CAST(SCOPE_IDENTITY() as int)";
 
         var parameters = new { user.Id, user.Username, user.Email, user.CreatedAt };
@@ -26,7 +26,7 @@ public class UserRepository : Repository<User>, IUserRepository
 
     public async Task<User?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var sql = "SELECT * FROM Users WHERE Id = @Id";
+        var sql = "SELECT * FROM [User] WHERE Id = @Id";
 
         return await _dbConnection.QueryFirstOrDefaultAsync<User>(
             new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
@@ -34,7 +34,7 @@ public class UserRepository : Repository<User>, IUserRepository
 
     public async Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var sql = "SELECT * FROM Users";
+        var sql = "SELECT * FROM [User]";
 
         return await _dbConnection.QueryAsync<User>(
             new CommandDefinition(sql, cancellationToken: cancellationToken));
@@ -42,7 +42,7 @@ public class UserRepository : Repository<User>, IUserRepository
 
     public async Task<bool> UpdateAsync(User user, CancellationToken cancellationToken = default)
     {
-        var sql = "UPDATE Users SET Name = @Name, Email = @Email WHERE Id = @Id";
+        var sql = "UPDATE [User] SET Name = @Name, Email = @Email WHERE Id = @Id";
 
         var affectedRows = await _dbConnection.ExecuteAsync(
             new CommandDefinition(sql, user, cancellationToken: cancellationToken));
@@ -52,7 +52,7 @@ public class UserRepository : Repository<User>, IUserRepository
 
     public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
     {
-        var sql = "DELETE FROM Users WHERE Id = @Id";
+        var sql = "DELETE FROM [User] WHERE Id = @Id";
 
         var affectedRows = await _dbConnection.ExecuteAsync(
             new CommandDefinition(sql, new { Id = id }, cancellationToken: cancellationToken));
@@ -62,7 +62,7 @@ public class UserRepository : Repository<User>, IUserRepository
 
     public async Task<bool> ExistsByEmail(string email, CancellationToken cancellationToken = default)
     {
-        var sql = "SELECT COUNT(1) FROM Users WHERE Email = @Email";
+        var sql = "SELECT COUNT(1) FROM [User] WHERE Email = @Email";
 
         return await _dbConnection.ExecuteScalarAsync<bool>(
             new CommandDefinition(sql, new { Email = email }, cancellationToken: cancellationToken));

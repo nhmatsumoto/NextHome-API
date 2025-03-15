@@ -1,6 +1,19 @@
 using NextHome.Infrastructure.IoC;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Adiciona suporte a localização
+builder.Services.AddLocalization(options => options.ResourcesPath = "../NextHome.API/Resources");
+
+// Configura os idiomas suportados
+var supportedCultures = new[]
+{
+    new CultureInfo("en"), // Inglês
+    new CultureInfo("pt-BR"), // Português
+    new CultureInfo("ja") // Japonês
+};
 
 // Cross Cutting IoC
 builder.Services.AddInfrastructure(builder.Configuration);

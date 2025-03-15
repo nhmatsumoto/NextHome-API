@@ -13,6 +13,7 @@ using NextHome.Domain.Interfaces;
 using NextHome.Domain.Interfaces.Repositories;
 using NextHome.Infrastructure.Repositories;
 using System.Data;
+using System.Globalization;
 
 namespace NextHome.Infrastructure.IoC
 {
@@ -30,8 +31,6 @@ namespace NextHome.Infrastructure.IoC
                           .AllowCredentials();
                 });
             });
-
-            IdentityModelEventSource.ShowPII = true;
 
             // Keycloak Configuration
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -63,6 +62,9 @@ namespace NextHome.Infrastructure.IoC
                         }
                     };
                 });
+
+        
+
 
             // Adiciona autorização
             services.AddAuthorization();

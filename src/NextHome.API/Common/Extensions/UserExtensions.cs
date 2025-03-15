@@ -7,7 +7,6 @@ public static class UserExtensions
     public static string GetUserId(this ClaimsPrincipal user) 
         => user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     
-
     public static string GetUserEmail(this ClaimsPrincipal user)
         => user.FindFirst(ClaimTypes.Email)?.Value;
 

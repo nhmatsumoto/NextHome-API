@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NextHome.API.Common.Extensions;
 using NextHome.Application.DTOs;
 using NextHome.Application.UseCases.Users.Interfaces;
 
@@ -34,6 +36,25 @@ public class UserController : ControllerBase
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
+
+    [HttpGet("me")]
+    [Authorize]
+    public IActionResult GetCurrentUser()
+    {
+        var userId = User.GetUserId();
+        var email = User.GetUserEmail();
+        var username = User.GetUsername();
+        var roles = User.GetRoles();
+
+        return Ok(new
+        {
+            Id = userId,
+            Email = email,
+            Username = username,
+            Roles = roles
+        });
+    }
+
 
     [HttpGet]
     //[Authorize(Roles = "admin")] // Apenas administradores podem visualizar todos os usuários

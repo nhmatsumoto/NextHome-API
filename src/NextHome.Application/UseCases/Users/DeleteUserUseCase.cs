@@ -12,6 +12,8 @@ public class DeleteUserUseCase : IDeleteUserUseCase
         _userRepository = userRepository;
     }
 
+
+    // Mudar para não deletar efetivamente o usuário (apenas atualizar para desabilitado)
     public async Task<bool> Execute(int id, CancellationToken cancellationToken = default)
     {
         var userExists = await _userRepository.GetByIdAsync(id, cancellationToken);
