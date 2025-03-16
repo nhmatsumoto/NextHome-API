@@ -1,3 +1,4 @@
+using NextHome.API.Middlewares;
 using NextHome.Infrastructure.IoC;
 using System.Globalization;
 
@@ -22,6 +23,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Exception Middleware 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors("NextHomeCorsPolicy");
 

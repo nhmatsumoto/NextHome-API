@@ -6,15 +6,15 @@ namespace NextHome.Application.UseCases.Properties;
 
 public class GetPropertyByIdUseCase : IGetPropertyByIdUseCase
 {
-    private readonly IRepository<Property> _repository;
+    private readonly IPropertyRepository _propertyRepository;
 
-    public GetPropertyByIdUseCase(IRepository<Property> repository)
+    public GetPropertyByIdUseCase(IPropertyRepository propertyRepository)
     {
-        _repository = repository;
+        _propertyRepository = propertyRepository;
     }
 
     public async Task<Property> ExecuteAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _repository.GetByIdAsync(id, cancellationToken);
+        return await _propertyRepository.GetByIdAsync(id, cancellationToken);
     }
 }
