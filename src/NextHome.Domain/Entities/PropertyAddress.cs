@@ -8,5 +8,4 @@ public class PropertyAddress
     public string PostalCode { get; set; } // Código postal (郵便番号)
     public string NearestStation { get; set; } // Estação mais próxima (最寄り駅)
     public int MinutesToStation { get; set; } // Minutos até a estação (駅までの分数)
-
 }

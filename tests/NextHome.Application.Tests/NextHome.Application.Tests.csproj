@@ -16,6 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\NextHome.Application\NextHome.Application.csproj" />
+    <ProjectReference Include="..\..\src\NextHome.Domain\NextHome.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

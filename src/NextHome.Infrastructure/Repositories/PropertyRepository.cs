@@ -24,24 +24,25 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
     public async Task<IEnumerable<Property>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         const string sql = @"
-        SELECT 
-            p.Id, p.Title, p.Description, p.Price, p.Bedrooms, p.Bathrooms, p.ParkingSpaces, 
-            p.FloorArea, p.YearBuilt, p.IsAvailable, p.Type, p.Category, p.AddressId, p.ManagementFee,
-            a.Street, a.City,
-            ph.Url AS PhotoUrl
-        FROM Property p
-        LEFT JOIN PropertyAddress a ON p.AddressId = a.Id
-        LEFT JOIN PropertyPhoto ph ON p.Id = ph.PropertyId";
+            SELECT 
+                p.Id, p.Title, p.Description, p.Price, p.Bedrooms, p.Bathrooms, p.ParkingSpaces, 
+                p.FloorArea, p.YearBuilt, p.IsAvailable, p.Type, p.Category, p.AddressId, p.ManagementFee,
+                a.Street, a.City,
+                ph.Url AS PhotoUrl
+            FROM Property p
+            LEFT JOIN PropertyAddress a ON p.AddressId = a.Id
+            LEFT JOIN PropertyPhoto ph ON p.Id = ph.PropertyId";
 
         var propertyDictionary = new Dictionary<int, Property>();
 
-        var properties = await GetOpenConnection().QueryAsync<Property, string, Property>(
+        var properties = await GetOpenConnection().QueryAsync<Property, PropertyAddress, string, Property>(
             sql,
-            (property, photoUrl) =>
+            (property, address, photoUrl) =>
             {
                 if (!propertyDictionary.TryGetValue(property.Id, out var existingProperty))
                 {
                     existingProperty = property;
+                    existingProperty.Address = address;
                     existingProperty.Photos = new List<PropertyPhoto>();
                     propertyDictionary.Add(existingProperty.Id, existingProperty);
                 }
@@ -53,7 +54,7 @@ public class PropertyRepository : Repository<Property>, IPropertyRepository
 
                 return existingProperty;
             },
-            splitOn: "PhotoUrl",
+            splitOn: "Street,PhotoUrl",
             commandTimeout: null,
             commandType: CommandType.Text
         );
